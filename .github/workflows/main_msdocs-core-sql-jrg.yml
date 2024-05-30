@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - msdocs-core-sql-jor
+name: Build and deploy ASP.Net Core app to Azure Web App - msdocs-core-sql-jrg
 
 on:
   push:
@@ -28,6 +28,12 @@ jobs:
       - name: dotnet publish
         run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
+      - name: Install dotnet ef tool
+        run: dotnet tool install -g dotnet-ef --version 8.0.6
+
+      - name: Generate dotnet ef migration bundle
+        run: dotnet ef migrations bundle --runtime linux-x64 -p DotNetCoreSqlDb/DotNetCoreSqlDb.csproj -o ${{env.DOTNET_ROOT}}/myapp/migrate
+
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
@@ -52,15 +58,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_F0A4BB3C66724126B3658AB8405497E7 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_F3B2BBD34D564F57940FEABDD11C9F57 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_32A213B558F145A58272AF04D077C706 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5322D71E30464C70A07CD10D9593FBA4 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B4D910DE2EE4473E9F7B272874CE4515 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C51B45AB53C64B6DBD57CDDEBAA24B80 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'msdocs-core-sql-jor'
+          app-name: 'msdocs-core-sql-jrg'
           slot-name: 'Production'
           package: .
           
